@@ -1,8 +1,9 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { getLoginUserUsingGet, userLoginUsingPost } from '@/api/userController.ts'
 
 export const useLoginUserStore = defineStore("loginUser", () => {
-  const loginUser = ref<any>({
+  const loginUser = ref<API.LoginUserVO>({
     username: "未登录",
   });
 
@@ -12,9 +13,10 @@ export const useLoginUserStore = defineStore("loginUser", () => {
     // if (res.data.code === 0 && res.data.data) {
     //   loginUser.value = res.data.data;
     // }
-    setTimeout(() => {
-      loginUser.value = { username: 'Test User', id: 1}
-    }, 3000)
+    const res = await getLoginUserUsingGet();
+    if(res.data.code === 0 && res.data.data){
+      loginUser.value = res.data.data;
+    }
   }
 
   function setLoginUser(newLoginUser: any) {
