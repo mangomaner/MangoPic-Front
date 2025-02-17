@@ -30,13 +30,11 @@ import GlobalHeader from '@/components/GlobalHeader.vue'
 #basicLayout .content{
   padding: 20px;
   background-color: #f8f8f8;
-  margin-bottom: 30px;
+
 }
 
 #basicLayout .footer{
   background-color: #efefef;
-  padding: 16px;
-  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
