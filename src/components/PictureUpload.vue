@@ -6,7 +6,7 @@
       :custom-request="handleUpload"
       :before-upload="beforeUpload"
     >
-      <img v-if="picture?.url" :src="picture?.url" alt="avatar" />
+      <img v-if="picture?.url" :src="picture?.url + '?x-oss-process=image/resize,m_lfit,h_480,w_480'" alt="avatar" />
       <div v-else>
         <loading-outlined v-if="loading"></loading-outlined>
         <plus-outlined v-else></plus-outlined>
@@ -23,9 +23,10 @@ import { message } from 'ant-design-vue';
 import type { UploadChangeParam, UploadProps } from 'ant-design-vue';
 import { uploadPictureUsingPost } from '@/api/pictureController.ts'
 
-interface  Props {
-  picture?: API.PictureVO;
-  onSuccess?: (newPicture: API.PictureVO) => void;
+interface Props {
+  picture?: API.PictureVO
+  spaceId?: number
+  onSuccess?: (newPicture: API.PictureVO) => void
 }
 
 const props = defineProps<Props>()
@@ -51,8 +52,11 @@ const loading = ref<boolean>(false)
 const handleUpload = async ({ file }: any) => {
   loading.value = true
   try {
-    const params = props.picture ? { id: props.picture.id } : {};
+    // 上传时传递 spaceId
+    const params: API.PictureUploadRequest = props.picture ? { id: props.picture.id } : {}
+    params.spaceId = props.spaceId;
     const res = await uploadPictureUsingPost(params, {}, file)
+
     if (res.data.code === 0 && res.data.data) {
       message.success('图片上传成功')
       // 将上传成功的图片信息传递给父组件
